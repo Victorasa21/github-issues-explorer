@@ -1,5 +1,4 @@
 import React, { useState, FormEvent, useEffect } from 'react';
-import { Link, Router } from 'react-router-dom';
 import { FiChevronRight } from 'react-icons/fi';
 import { Title, Form, Repositories, Error } from './style';
 import logo from '../../assets/logo.svg';
@@ -52,9 +51,13 @@ const Dashboard: React.FC = () => {
       setRepositories([...repositories, repository]);
       setNewRepo('');
       setInputError('');
-    } catch {
-      setInputError('');
-      setInputError('Puts deu falha na requisição, amigão!');
+    } catch (e) {
+      if (e?.response?.status === 404) {
+        setInputError('Repo não encontrado. Use o formato "user/repo"!');
+      } else {
+        setInputError('');
+        setInputError('Puts deu falha na requisição, amigão!');
+      }
     }
   }
 
