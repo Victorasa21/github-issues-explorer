@@ -8,8 +8,8 @@ import GlobalStyle from '../styles/global';
 const Routes: React.FC = () => (
   <>
     <Switch>
-      <Route path="/" exact component={ Dashboard } />
-      <Route path="/Repository/:repository+" exact component={ Repository } />
+      <Route path="/" exact component={Dashboard} />
+      <Route path="/Repository/:repository+" exact component={Repository} />
     </Switch>
     <GlobalStyle />
   </>

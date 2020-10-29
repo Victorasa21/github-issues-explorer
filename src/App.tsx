@@ -7,8 +7,8 @@ const App: React.FC = () => {
     <BrowserRouter>
       <Routes />
     </BrowserRouter>
-
   );
 };
 
 export default App;
+
