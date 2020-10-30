@@ -1,7 +1,11 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import Dashboard from './index';
-import {MemoryRouter} from "react-router-dom";
+import userEvent from '@testing-library/user-event'
+import { MemoryRouter } from 'react-router-dom'
+import { createMemoryHistory } from 'history'
+import { Router } from 'react-router-dom'
+import App from './App';
+import Routes from "./routes";
 
 interface Repository {
   full_name: string;
@@ -41,18 +45,20 @@ const localStorageMock = ((): object => {
 
 Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 
-describe('Dashboard Component', () => {
-  it('should render the title', () => {
-    render(<Dashboard />, { wrapper: MemoryRouter });
+describe('App Component', () => {
+  it('should render the Dashboard at first', () => {
+    render(<App />);
     const title = screen.queryByText('Explore Repositórios no Github');
 
     expect(title).toBeInTheDocument();
   });
 
-  it('should render the repos stored on localStorage', () => {
-    render(<Dashboard />, { wrapper: MemoryRouter });
-    const repoName = screen.queryByText('Repo de testes');
+  it('should render the Repository page after clicking at some repo', async () => {
+    render(<App />);
+    const repoLink = screen.getByTestId('repo-link');
+    await userEvent.click(repoLink);
+    const voltarText = screen.queryByText('voltar');
 
-    expect(repoName).toBeInTheDocument();
+    expect(voltarText).toBeInTheDocument();
   });
 });
