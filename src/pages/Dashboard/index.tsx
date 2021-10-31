@@ -13,17 +13,24 @@ interface Repository {
     avatar_url: string;
   };
 }
+
+interface SearchApiResponse {
+  total_count: number;
+  incomplete_results: boolean;
+  items: [Repository];
+}
+
 const Dashboard: React.FC = () => {
   const [inputError, setInputError] = useState('');
   const [newRepo, setNewRepo] = useState('');
 
   const [repositories, setRepositories] = useState<Repository[]>(() => {
-    const storagedRepository = localStorage.getItem(
+    const storedRepository = localStorage.getItem(
       '@GithubExplorer: repositories',
     );
 
-    if (storagedRepository) {
-      return JSON.parse(storagedRepository);
+    if (storedRepository) {
+      return JSON.parse(storedRepository);
     }
     return [];
   });
@@ -34,6 +41,35 @@ const Dashboard: React.FC = () => {
       JSON.stringify(repositories),
     );
   }, [repositories]);
+
+  async function handleSearchRepos(
+    event: FormEvent<HTMLFormElement>,
+  ): Promise<void> {
+    event.preventDefault();
+
+    if (!newRepo) {
+      setInputError('Por favor, insira o nome do repositório para busca!');
+      return;
+    }
+
+    try {
+      const response = await api.get<SearchApiResponse>(
+        `search/repositories?q=${newRepo}`,
+      );
+      console.log(response);
+      const repos: [Repository] = response.data.items;
+      setRepositories([...repositories, ...repos]);
+      setNewRepo('');
+      setInputError('');
+    } catch (e) {
+      if (e?.response?.status === 404) {
+        setInputError('Nenhum resultado encontrado!');
+      } else {
+        setInputError('');
+        setInputError('Puts deu falha na requisição, amigão!');
+      }
+    }
+  }
 
   async function handleAddRepository(
     event: FormEvent<HTMLFormElement>,
@@ -67,7 +103,7 @@ const Dashboard: React.FC = () => {
       <img src={logo} alt="background github" />
       <Title>Explore Repositórios no Github</Title>
 
-      <Form hasError={!!inputError} onSubmit={handleAddRepository}>
+      <Form hasError={!!inputError} onSubmit={handleSearchRepos}>
         <input
           value={newRepo}
           onChange={(e): void => setNewRepo(e.target.value)}
