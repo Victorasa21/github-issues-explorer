@@ -27,4 +27,19 @@ body, input, button {
 button {
   cursor:pointer
 }
+
+.star-repo {
+  flex: 0 !important;
+}
+
+svg.starred {
+  fill: #ffe600;
+  width: 30px;
+  height: 30px;
+}
+
+svg.not-selected {
+  width: 30px;
+  height: 30px;
+}
 `
