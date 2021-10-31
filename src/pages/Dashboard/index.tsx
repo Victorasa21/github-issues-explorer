@@ -56,7 +56,6 @@ const Dashboard: React.FC = () => {
       const response = await api.get<SearchApiResponse>(
         `search/repositories?q=${newRepo}`,
       );
-      console.log(response);
       const repos: [Repository] = response.data.items;
       setRepositories([...repositories, ...repos]);
       setNewRepo('');
