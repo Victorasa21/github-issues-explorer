@@ -1,10 +1,10 @@
-import React, {useState, FormEvent, useEffect, MouseEvent} from 'react';
+import React, { useState, FormEvent, useEffect, MouseEvent } from 'react';
 import { FiChevronRight, FiStar } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
+import { AiFillStar } from 'react-icons/all';
 import { Title, Form, Repositories, Error } from './style';
 import logo from '../../assets/logo.svg';
 import api from '../../services/api';
-import {AiFillStar} from "react-icons/all";
 
 interface Repository {
   full_name: string;
@@ -101,7 +101,19 @@ const Dashboard: React.FC = () => {
   function handleAddRepository(repoId: string, event: MouseEvent): void {
     event.preventDefault();
 
-    setRepositories([...repositories, reposCache[repoId]]);
+    if (!repoIds.includes(repoId)) {
+      setRepositories([...repositories, reposCache[repoId]]);
+      setRepoIds([...repoIds, repoId]);
+    }
+  }
+
+  function handleRemoveRepository(repoId: string, event: MouseEvent): void {
+    event.preventDefault();
+    const newRepositories = repositories.filter((repo) => repo.id !== repoId);
+    setRepositories(newRepositories);
+
+    const newRepoIds = repoIds.filter((id) => id !== repoId);
+    setRepoIds(newRepoIds);
   }
 
   return (
@@ -127,7 +139,14 @@ const Dashboard: React.FC = () => {
                 to={`/repository/${repository.full_name}`}
                 data-testid="repo-link"
               >
-                <div className="star-repo selected">
+                {/* eslint-disable-next-line */}
+                <div
+                  className="star-repo selected"
+                  role="button"
+                  onClick={(e): void =>
+                    handleRemoveRepository(repository.id, e)
+                  }
+                >
                   <AiFillStar className="starred" />
                 </div>
                 <img
@@ -145,32 +164,42 @@ const Dashboard: React.FC = () => {
         </Repositories>
       </div>
       <Repositories>
-        {Object.values(reposCache).map((repository) => (
-          <span key={repository.full_name}>
-            <Link
-              to={`/repository/${repository.full_name}`}
-              data-testid="repo-link"
-            >
-              {/* eslint-disable-next-line */}
-              <div
-                className="star-repo"
-                role="button"
-                onClick={(e): void => handleAddRepository(repository.id, e)}
+        {Object.values(reposCache).map((repository) => {
+          const isStarred = Boolean(repoIds.includes(repository.id));
+          return (
+            <span key={repository.full_name}>
+              <Link
+                to={`/repository/${repository.full_name}`}
+                data-testid="repo-link"
               >
-                <FiStar className="not-selected" />
-              </div>
-              <img
-                src={repository.owner.avatar_url}
-                alt={repository.owner.login}
-              />
-              <div>
-                <strong>{repository.full_name}</strong>
-                <p>{repository.description}</p>
-              </div>
-              <FiChevronRight size={30} />
-            </Link>
-          </span>
-        ))}
+                {/* eslint-disable-next-line */}
+                <div
+                  className="star-repo"
+                  role="button"
+                  onClick={(e): void => {
+                    if (!isStarred) {
+                      handleAddRepository(repository.id, e);
+                    } else {
+                      handleRemoveRepository(repository.id, e);
+                    }
+                  }}
+                >
+                  {isStarred && <AiFillStar className="starred" />}
+                  {!isStarred && <FiStar className="not-selected" />}
+                </div>
+                <img
+                  src={repository.owner.avatar_url}
+                  alt={repository.owner.login}
+                />
+                <div>
+                  <strong>{repository.full_name}</strong>
+                  <p>{repository.description}</p>
+                </div>
+                <FiChevronRight size={30} />
+              </Link>
+            </span>
+          );
+        })}
       </Repositories>
     </>
   );
