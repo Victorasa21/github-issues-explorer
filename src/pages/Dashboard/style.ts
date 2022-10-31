@@ -1,16 +1,33 @@
-import styled, { css } from 'styled-components'
-import { shade } from 'polished'
+/* eslint-disable */
+
+import styled, { css } from 'styled-components';
+import { shade } from 'polished';
 
 interface FromProps {
-  hasError: boolean
+  hasError: boolean;
 }
 
 export const Title = styled.h1`
   margin-top: 40px;
   max-width: 450px;
-  font-size: 48px;
+  font-size: 50px;
   color: #3a3a3a;
-`
+`;
+
+export const Button = styled.div`
+  margin-top: 40px;
+  max-width: 450px;
+  font-size: 20px;
+  color: #3a3a3a;
+  cursor: pointer;
+`;
+
+export const FavoritesHeader = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+`;
 
 export const Form = styled.form<FromProps>`
   margin-top: 40px;
@@ -33,13 +50,13 @@ export const Form = styled.form<FromProps>`
     color: #3a3a3a;
     border: 2px solid #fff;
     border-right: 0px;
-    ${props =>
-    props.hasError &&
-    css`
+    ${(props) =>
+      props.hasError &&
+      css`
         border-color: red;
       `}
 
-    &:placeholder {
+    &::placeholder {
       color: #a8a8b3;
     }
 
@@ -59,7 +76,7 @@ export const Form = styled.form<FromProps>`
     transition: background-color 0.2s;
 
     &:hover {
-      background: ${shade(0.2, '#04d361') };
+      background: ${shade(0.2, '#04d361')};
     }
 
     @media (max-width: 740px) {
@@ -67,13 +84,13 @@ export const Form = styled.form<FromProps>`
       height: 30px;
     }
   }
-`
+`;
 
 export const Error = styled.span`
   color: red;
   display: block;
   margin-top: 8px;
-`
+`;
 export const Repositories = styled.div`
   margin-top: 80px;
   max-width: 700px;
@@ -87,7 +104,7 @@ export const Repositories = styled.div`
     display: flex;
     align-items: center;
     transition: transform 0.2s;
-    color:#a8a8b3;
+    color: #a8a8b3;
 
     &:hover {
       transform: translateX(10px);
@@ -123,4 +140,4 @@ export const Repositories = styled.div`
       }
     }
   }
-`
+`;

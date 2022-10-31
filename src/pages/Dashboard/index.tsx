@@ -2,7 +2,14 @@ import React, { useState, FormEvent, useEffect, MouseEvent } from 'react';
 import { FiChevronRight, FiStar } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import { AiFillStar } from 'react-icons/all';
-import { Title, Form, Repositories, Error } from './style';
+import {
+  Title,
+  Form,
+  Repositories,
+  Error,
+  Button,
+  FavoritesHeader,
+} from './style';
 import logo from '../../assets/logo.svg';
 import api from '../../services/api';
 
@@ -116,6 +123,12 @@ const Dashboard: React.FC = () => {
     setRepoIds(newRepoIds);
   }
 
+  function removeAllFavorites(): void {
+    setRepoIds([]);
+    setReposCache({});
+    setRepositories([]);
+  }
+
   return (
     <>
       <img src={logo} alt="background github" />
@@ -131,7 +144,12 @@ const Dashboard: React.FC = () => {
       </Form>
       {inputError && <Error>{inputError}</Error>}
       <div className="starred-repos">
-        <Title>Repositórios favoritos</Title>
+        <FavoritesHeader>
+          <Title>Repositórios favoritos</Title>
+          {!!repoIds.length && (
+            <Button onClick={removeAllFavorites}>Remover todos</Button>
+          )}
+        </FavoritesHeader>
         <Repositories>
           {repositories.map((repository) => (
             <span key={repository.full_name}>
