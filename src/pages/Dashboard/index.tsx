@@ -119,7 +119,7 @@ const Dashboard: React.FC = () => {
   return (
     <>
       <img src={logo} alt="background github" />
-      <Title>Explore Repositórios no Github</Title>
+      <Title>Explore Repositórios de código no Github!</Title>
 
       <Form hasError={!!inputError} onSubmit={handleSearchRepos}>
         <input
@@ -131,7 +131,7 @@ const Dashboard: React.FC = () => {
       </Form>
       {inputError && <Error>{inputError}</Error>}
       <div className="starred-repos">
-        <Title>Repositórios favoritados</Title>
+        <Title>Repositórios favoritos</Title>
         <Repositories>
           {repositories.map((repository) => (
             <span key={repository.full_name}>
